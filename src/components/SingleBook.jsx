@@ -38,6 +38,7 @@ class SingleBook extends Component {
             src={this.props.book.img}
             className="card-img"
           />
+         
           <Card.Body>
             <Card.Title>{reduceText(this.props.book.title, 20)}</Card.Title>
             <Card.Text>
