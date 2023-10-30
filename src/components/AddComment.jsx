@@ -6,16 +6,30 @@ class AddComment extends Component {
     comment: {
       comment: "",
       rate: "1",
-      elementId: this.props.id,
+      elementId: this.props.selectedBook,
     },
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedBook !== this.state.comment.elementId) {
+      this.setState({
+        comment: {
+          ...this.state.comment,
+          elementId: this.props.selectedBook,
+        },
+      });
+    }
+  }
+
   sendComment = async () => {
     try {
-      const response = await fetch("https://striveschool-api.herokuapp.com/api/comments/", {
-      headers: {
-      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTgzMjczMzUsImV4cCI6MTY5OTUzNjkzNX0.wBALfsJ9rbb9HJoTfo0jsu1t7mBWvXx2MR-NynmDvlw"
-      },
+      const response = await fetch(
+        "https://striveschool-api.herokuapp.com/api/comments/",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg2ODAyOTQsImV4cCI6MTY5OTg4OTg5NH0.l8S8EEgCuPwPYadJZpQsZPOaydfFa-gJ7O-IH-4hqBE"
+                  },
           method: "POST",
           body: JSON.stringify(this.state.comment),
         }

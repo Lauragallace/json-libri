@@ -15,10 +15,14 @@ class SingleComment extends Component {
               this.props.super.setState({
                 isLoading: true,
               });
-              const response = await fetch("https://striveschool-api.herokuapp.com/api/comments/", {
-              headers: {
-              "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTgzMjczMzUsImV4cCI6MTY5OTUzNjkzNX0.wBALfsJ9rbb9HJoTfo0jsu1t7mBWvXx2MR-NynmDvlw"
-              },
+              const response = await fetch(
+                "https://striveschool-api.herokuapp.com/api/comments/" +
+                  this.props.comment._id,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg2ODAyOTQsImV4cCI6MTY5OTg4OTg5NH0.l8S8EEgCuPwPYadJZpQsZPOaydfFa-gJ7O-IH-4hqBE"
+                  },
                   method: "DELETE",
                 }
               );

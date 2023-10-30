@@ -16,7 +16,7 @@ class CommentList extends Component {
             <Spinner animation="border" variant="info" />
           </div>
         )}
-        {this.props.listOfComments.map((comment, i) => {
+        {this.props.listOfComment.map((comment, i) => {
           return (
             <SingleComment
               comment={comment}

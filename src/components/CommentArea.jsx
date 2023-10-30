@@ -1,5 +1,5 @@
 import { Component } from "react";
-import CommentList from "./CommentsList";
+import CommentList from "./CommentList";
 import AddComment from "./AddComment";
 import Error from "./Error";
 
@@ -12,13 +12,21 @@ class CommentArea extends Component {
     this.getComments();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedBook !== this.props.selectedBook) {
+      this.getComments();
+    }
+  }
+
   getComments = async () => {
     try {
       const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/comments/",+ this.props.id, {
-        headers: {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTgzMjczMzUsImV4cCI6MTY5OTUzNjkzNX0.wBALfsJ9rbb9HJoTfo0jsu1t7mBWvXx2MR-NynmDvlw"
-        }
+        "https://striveschool-api.herokuapp.com/api/comments/" +
+          this.props.selectedBook,
+        {
+          headers: {
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg2ODAyOTQsImV4cCI6MTY5OTg4OTg5NH0.l8S8EEgCuPwPYadJZpQsZPOaydfFa-gJ7O-IH-4hqBE"
+                  },
         }
       );
       if (response.ok) {
@@ -34,7 +42,7 @@ class CommentArea extends Component {
   };
   render() {
     return (
-      <>
+      <div className="comment-area">
         {this.state.error && <Error />}
         <CommentList
           listOfComments={this.state.listOfComments}
@@ -42,11 +50,11 @@ class CommentArea extends Component {
           commentArea={this}
         />
         <AddComment
-          id={this.props.id}
+          selectedBook={this.props.selectedBook}
           update={this.getComments}
           commentArea={this}
         />
-      </>
+      </div>
     );
   }
 }
