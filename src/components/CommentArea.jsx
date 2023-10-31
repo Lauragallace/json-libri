@@ -1,62 +1,51 @@
-import { Component } from "react";
-import CommentList from "./CommentList";
+import CommentList from "./CommentsList";
 import AddComment from "./AddComment";
 import Error from "./Error";
+import { useEffect, useState } from "react";
 
-class CommentArea extends Component {
-  state = {
-    listOfComments: [],
-    error: false,
-  };
-  componentDidMount() {
-    this.getComments();
-  }
+const CommentArea = ({ selectedBook }) => {
+  const [listOfComments, setlistOfComments] = useState([]);
+  const [error, setError] = useState(false);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedBook !== this.props.selectedBook) {
-      this.getComments();
-    }
-  }
+  useEffect(() => {
+    getComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBook]);
 
-  getComments = async () => {
+  const getComments = async () => {
     try {
       const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/comments/" +
-          this.props.selectedBook,
+        "https://striveschool-api.herokuapp.com/api/comments/" + selectedBook,
         {
           headers: {
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg2ODAyOTQsImV4cCI6MTY5OTg4OTg5NH0.l8S8EEgCuPwPYadJZpQsZPOaydfFa-gJ7O-IH-4hqBE"
-                  },
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg3NjAyMjUsImV4cCI6MTY5OTk2OTgyNX0.7azTwQiFiOVQiBCHLlfKQDr5ikUBZnV4rth4NE3uhmQ"
+},
         }
       );
       if (response.ok) {
         const data = await response.json();
-        this.setState({
-          listOfComments: data,
-        });
+        setlistOfComments(data);
       }
     } catch (err) {
       console.log("ERRORE", err);
-      this.setState({ error: true });
+      setError(true);
     }
   };
-  render() {
-    return (
-      <div className="comment-area">
-        {this.state.error && <Error />}
-        <CommentList
-          listOfComments={this.state.listOfComments}
-          update={this.getComments}
-          commentArea={this}
-        />
-        <AddComment
-          selectedBook={this.props.selectedBook}
-          update={this.getComments}
-          commentArea={this}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="comment-area">
+      {error && <Error />}
+      <CommentList
+        listOfComments={listOfComments}
+        update={getComments}
+        setError={setError}
+      />
+      <AddComment
+        selectedBook={selectedBook}
+        update={getComments}
+        // commentArea={this}
+      />
+    </div>
+  );
+};
 
 export default CommentArea;

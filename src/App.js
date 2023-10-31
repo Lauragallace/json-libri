@@ -10,8 +10,10 @@ import BookList from "./components/BookList";
 function App() {
   return (
     <>
-      <MyNav />
-      <Welcome />
+      <div className="position-fixed top-0 w-100 top">
+        <MyNav className />
+        <Welcome />
+      </div>
       {/* <AllTheBooks genre={books} /> */}
       <BookList genre={books} />
       <MyFooter />

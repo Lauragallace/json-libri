@@ -1,99 +1,85 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-class AddComment extends Component {
-  state = {
-    comment: {
-      comment: "",
-      rate: "1",
-      elementId: this.props.selectedBook,
-    },
-  };
+const AddComment = ({ selectedBook, id, update }) => {
+  const [comment, setComment] = useState({
+    comment: "",
+    rate: "1",
+    elementId: selectedBook,
+  });
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedBook !== this.state.comment.elementId) {
-      this.setState({
-        comment: {
-          ...this.state.comment,
-          elementId: this.props.selectedBook,
-        },
-      });
-    }
-  }
+  useEffect(() => {
+    setComment({
+      ...comment,
+      elementId: selectedBook,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBook]);
 
-  sendComment = async () => {
+  const sendComment = async () => {
     try {
       const response = await fetch(
         "https://striveschool-api.herokuapp.com/api/comments/",
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg2ODAyOTQsImV4cCI6MTY5OTg4OTg5NH0.l8S8EEgCuPwPYadJZpQsZPOaydfFa-gJ7O-IH-4hqBE"
-                  },
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNmIyNmY2ZTNkZDAwMTQ5NWU0NmQiLCJpYXQiOjE2OTg3NjAyMjUsImV4cCI6MTY5OTk2OTgyNX0.7azTwQiFiOVQiBCHLlfKQDr5ikUBZnV4rth4NE3uhmQ"
+          },
           method: "POST",
-          body: JSON.stringify(this.state.comment),
+          body: JSON.stringify(comment),
         }
       );
       if (response.ok) {
-        this.setState({
-          comment: {
-            comment: "",
-            rate: "1",
-            elementId: this.props.id,
-          },
+        setComment({
+          comment: "",
+          rate: "1",
+          elementId: id,
         });
-        this.props.update();
+        update();
       }
     } catch (err) {
       console.log("ERRORE", err);
     }
   };
 
-  submitHandler = async (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    this.sendComment();
+    sendComment();
   };
 
-  handleInputChange(name, value) {
-    this.setState({
-      comment: {
-        ...this.state.comment,
-        [name]: value,
-      },
-    });
-  }
+  const handleInputChange = (name, value) => {
+    setComment({ ...comment, [name]: value });
+  };
 
-  render() {
-    return (
-      <Form onSubmit={this.submitHandler}>
-        <Form.Group className="mb-3">
-          <Form.Label>Recensione</Form.Label>
-          <Form.Control
-            type="text"
-            required
-            value={this.state.comment.comment}
-            onChange={(e) => this.handleInputChange("comment", e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Voto</Form.Label>
-          <Form.Select
-            onChange={(e) => this.handleInputChange("rate", e.target.value)}
-            value={this.state.comment.rate}
-          >
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </Form.Select>
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
-    );
-  }
-}
+  return (
+    <Form onSubmit={submitHandler}>
+      <Form.Group className="mb-3">
+        <Form.Label>Recensione</Form.Label>
+        <Form.Control
+          type="text"
+          required
+          value={comment.comment}
+          onChange={(e) => handleInputChange("comment", e.target.value)}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Voto</Form.Label>
+        <Form.Select
+          onChange={(e) => handleInputChange("rate", e.target.value)}
+          value={comment.rate}
+        >
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </Form.Select>
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
+  );
+};
 
 export default AddComment;

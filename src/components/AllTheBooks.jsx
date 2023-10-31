@@ -1,19 +1,8 @@
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
-function reduceText(testo, lunghezzaMassima) {
-
-  if (testo.length > lunghezzaMassima) {
-  
-    return testo.slice(0, lunghezzaMassima) + "...";
-  } else {
-   
-    return testo;
-  }
-}
+import { reduceText } from "../utility/utility";
 
 function AllTheBooks(props) {
   return (
@@ -29,7 +18,6 @@ function AllTheBooks(props) {
                   Categoria:&nbsp;
                   {book.category}
                 </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
               </Card.Body>
             </Card>
           </Col>
